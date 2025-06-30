@@ -76,7 +76,7 @@ function Rooms(props) {
 
 export async function getServerSideProps() {
   try {
-    const apiBaseUrl = publicRuntimeConfig?.API_BASE_URL || process.env.API_BASE_URL || 'http://localhost:5000';
+    const apiBaseUrl = publicRuntimeConfig?.API_BASE_URL || process.env.API_BASE_URL || 'http://localhost:5001';
     const response = await axios.get(`${apiBaseUrl}/api/v1/all-rooms-list`);
     const rooms = response?.data?.result || null;
 

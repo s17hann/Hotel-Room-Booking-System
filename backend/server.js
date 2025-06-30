@@ -21,7 +21,7 @@ const app = require('./src/app');
 const logger = require('./src/middleware/winston.logger');
 
 // app listens to .env defined port with sensible default fallbacks
-const PORT = process.env.APP_PORT || 5000;
+const PORT = process.env.APP_PORT || 5001;
 const BASE_URL = process.env.APP_BASE_URL || `http://localhost:${PORT}`;
 
 app.listen(PORT, () => {

@@ -36,7 +36,7 @@ function MyProfile() {
   const props = {
     accept: 'image/*',
     name: 'avatar',
-    action: `${publicRuntimeConfig.API_BASE_URL}/api/v1/avatar-update`,
+    action: `${publicRuntimeConfig?.API_BASE_URL || 'http://localhost:5001'}/api/v1/avatar-update`,
     method: 'put',
     headers: { authorization: `Bearer ${token}` },
     onChange(info) {

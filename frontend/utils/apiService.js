@@ -11,10 +11,11 @@ import axios from 'axios';
 import getConfig from 'next/config';
 import { getSessionToken, removeSessionAndLogoutUser } from './authentication';
 
-const { publicRuntimeConfig } = getConfig();
+const nextConfig = getConfig();
+const publicRuntimeConfig = nextConfig?.publicRuntimeConfig;
 
 const ApiService = axios.create({
-  baseURL: publicRuntimeConfig.API_BASE_URL
+  baseURL: publicRuntimeConfig?.API_BASE_URL || 'http://localhost:5001'
 });
 
 /**
