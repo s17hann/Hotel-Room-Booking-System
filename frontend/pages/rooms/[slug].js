@@ -29,6 +29,7 @@ import { formattedLocalRooms } from '../../data/rooms';
 const { publicRuntimeConfig } = getConfig();
 
 function RoomPreview(props) {
+  const currentRoom = props?.room?.data || props?.room;
   const [bookingModal, setBookingModal] = useState({ open: false, roomId: null });
   const token = getSessionToken();
   const user = getSessionUser();
@@ -41,17 +42,17 @@ function RoomPreview(props) {
       router.push('/auth/login');
     } else {
       setBookingModal((prevState) => (
-        { ...prevState, open: true, roomId: props?.room?.data?.id }
+        { ...prevState, open: true, roomId: currentRoom?.id || currentRoom?._id }
       ));
     }
   };
 
   return (
     <>
-      <MainLayout title='Beach Resort ― Rooms Preview'>
-        {!props?.room && !props?.error ? (
+      <MainLayout title={`Beach Resort ― ${currentRoom?.room_name || 'Room'} Preview`}>
+        {!currentRoom && !props?.error ? (
           <RoomDetailsSkeleton />
-        ) : props?.error ? (
+        ) : !currentRoom && props?.error ? (
           <div className='error'>
             <h3>{props?.error?.message || 'No such room could be found!'}</h3>
             <Link className='btn-primary' href='/rooms'>
@@ -61,7 +62,7 @@ function RoomPreview(props) {
         ) : (
           <>
             <StyledHero>
-              <Banner title={`${props?.room?.data?.room_name} room`}>
+              <Banner title={`${currentRoom?.room_name || 'Luxurious'} room`}>
                 <Link className='btn-primary' href='/rooms'>
                   Back to rooms
                 </Link>
@@ -70,11 +71,11 @@ function RoomPreview(props) {
 
             <section className='single-room'>
               <div className='single-room-images'>
-                {props?.room?.data?.room_images?.map((item) => (
+                {currentRoom?.room_images?.map((item) => (
                   <div key={uniqueId()} className='single-room-image-wrapper'>
                     <Image
                       src={item?.url || 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80'}
-                      alt={props?.room?.data?.room_name || 'Room photo'}
+                      alt={currentRoom?.room_name || 'Room photo'}
                       fill
                       sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                       className='single-room-image'
@@ -86,28 +87,28 @@ function RoomPreview(props) {
               <div className='single-room-info'>
                 <article className='desc'>
                   <h3>Details:</h3>
-                  <p>{props?.room?.data?.room_description}</p>
+                  <p>{currentRoom?.room_description || 'Experience world-class luxury and comfort with panoramic views and bespoke amenities.'}</p>
                 </article>
 
                 <article className='info'>
                   <h3>Information:</h3>
                   <h6>
-                    {`Price : $ ${props?.room?.data?.room_price}`}
+                    {`Price : $ ${currentRoom?.room_price || 0}`}
                   </h6>
                   <h6>
-                    {`Size : ${props?.room?.data?.room_size} SQFT`}
+                    {`Size : ${currentRoom?.room_size || 0} SQFT`}
                   </h6>
                   <h6>
                     Max capacity :
                     {' '}
-                    {props?.room?.data?.room_capacity > 1
-                      ? `${props?.room?.data?.room_capacity} people`
-                      : `${props?.room?.data?.room_capacity} person`}
+                    {currentRoom?.room_capacity > 1
+                      ? `${currentRoom?.room_capacity} people`
+                      : `${currentRoom?.room_capacity || 1} person`}
                   </h6>
-                  <h6>{props?.room?.data?.allow_pets ? 'pets allowed' : 'no pets allowed'}</h6>
-                  <h6>{props?.room?.data?.provide_breakfast && 'free breakfast included'}</h6>
+                  <h6>{currentRoom?.allow_pets ? 'pets allowed' : 'no pets allowed'}</h6>
+                  <h6>{currentRoom?.provide_breakfast && 'free breakfast included'}</h6>
 
-                  {props?.room?.data?.room_status === 'available' ? (
+                  {currentRoom?.room_status === 'available' || !currentRoom?.room_status ? (
                     <Button
                       className='btn-primary'
                       type='default'
@@ -129,10 +130,22 @@ function RoomPreview(props) {
                 </article>
               </div>
 
+              {/* room extra facilities */}
+              {currentRoom?.extra_facilities?.length > 0 && (
+                <section className='room-extras' style={{ width: '90vw', maxWidth: '1200px', margin: '3rem auto 0' }}>
+                  <h6>Extras & Amenities:</h6>
+                  <ul className='extras'>
+                    {currentRoom.extra_facilities.map((item) => (
+                      <li key={uniqueId()}>{item}</li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
               {/* room reviews list */}
               <div className='single-room-images'>
-                {props?.room?.data?.id && (
-                  <RoomReviewList roomId={props?.room?.data?.id} />
+                {(currentRoom?.id || currentRoom?._id) && (
+                  <RoomReviewList roomId={currentRoom?.id || currentRoom?._id} />
                 )}
               </div>
             </section>
@@ -159,7 +172,7 @@ export async function getServerSideProps(ctx) {
     const response = await axios.get(
       `${apiBaseUrl}/api/v1/get-room-by-id-or-slug-name/${ctx.query.slug}`
     );
-    const room = response?.data?.result || localRoom;
+    const room = response?.data?.result || (localRoom ? { data: localRoom } : null);
 
     return {
       props: {
@@ -171,7 +184,7 @@ export async function getServerSideProps(ctx) {
     if (localRoom) {
       return {
         props: {
-          room: localRoom,
+          room: { data: localRoom },
           error: null
         }
       };

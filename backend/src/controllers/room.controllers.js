@@ -308,22 +308,22 @@ exports.getRoomByIdOrSlugName = async (req, res) => {
       room_images: room?.room_images?.map(
         (img) => ({ url: process.env.APP_BASE_URL + img.url })
       ),
-      created_by: {
-        id: room?.created_by._id,
-        userName: room?.created_by.userName,
-        fullName: room?.created_by.fullName,
-        email: room?.created_by.email,
-        phone: room?.created_by.phone,
-        avatar: process.env.APP_BASE_URL + room?.created_by.avatar,
-        gender: room?.created_by.gender,
-        dob: room?.created_by.dob,
-        address: room?.created_by.address,
-        role: room?.created_by.role,
-        verified: room?.created_by.verified,
-        status: room?.created_by.status,
-        createdAt: room?.created_by.createdAt,
-        updatedAt: room?.created_by.updatedAt
-      },
+      created_by: room?.created_by ? {
+        id: room.created_by._id,
+        userName: room.created_by.userName,
+        fullName: room.created_by.fullName,
+        email: room.created_by.email,
+        phone: room.created_by.phone,
+        avatar: room.created_by.avatar ? (process.env.APP_BASE_URL + room.created_by.avatar) : null,
+        gender: room.created_by.gender,
+        dob: room.created_by.dob,
+        address: room.created_by.address,
+        role: room.created_by.role,
+        verified: room.created_by.verified,
+        status: room.created_by.status,
+        createdAt: room.created_by.createdAt,
+        updatedAt: room.created_by.updatedAt
+      } : null,
       created_at: room?.createdAt,
       updated_at: room?.updatedAt
     };
