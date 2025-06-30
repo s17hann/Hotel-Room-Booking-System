@@ -76,9 +76,9 @@ function Rooms(props) {
 
 export async function getServerSideProps() {
   try {
-    // Fetch data from the server-side API
-    const response = await axios.get(`${publicRuntimeConfig.API_BASE_URL}/api/v1/all-rooms-list`);
-    const rooms = response?.data?.result;
+    const apiBaseUrl = publicRuntimeConfig?.API_BASE_URL || process.env.API_BASE_URL || 'http://localhost:5000';
+    const response = await axios.get(`${apiBaseUrl}/api/v1/all-rooms-list`);
+    const rooms = response?.data?.result || null;
 
     return {
       props: {
@@ -87,10 +87,11 @@ export async function getServerSideProps() {
       }
     };
   } catch (err) {
+    const errorMessage = err?.response?.data?.message || err?.message || 'Failed to fetch rooms';
     return {
       props: {
         rooms: null,
-        error: err?.data
+        error: { message: errorMessage }
       }
     };
   }

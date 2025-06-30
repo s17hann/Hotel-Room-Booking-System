@@ -152,11 +152,11 @@ function RoomPreview(props) {
 
 export async function getServerSideProps(ctx) {
   try {
-    // Fetch data from the server-side API
+    const apiBaseUrl = publicRuntimeConfig?.API_BASE_URL || process.env.API_BASE_URL || 'http://localhost:5000';
     const response = await axios.get(
-      `${publicRuntimeConfig.API_BASE_URL}/api/v1/get-room-by-id-or-slug-name/${ctx.query.slug}`
+      `${apiBaseUrl}/api/v1/get-room-by-id-or-slug-name/${ctx.query.slug}`
     );
-    const room = response?.data?.result;
+    const room = response?.data?.result || null;
 
     return {
       props: {
@@ -165,10 +165,11 @@ export async function getServerSideProps(ctx) {
       }
     };
   } catch (err) {
+    const errorMessage = err?.response?.data?.message || err?.message || 'Failed to fetch room details';
     return {
       props: {
         room: null,
-        error: err?.data
+        error: { message: errorMessage }
       }
     };
   }
