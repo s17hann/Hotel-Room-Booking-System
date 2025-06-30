@@ -19,7 +19,7 @@ function Services() {
 
       <div className='services-center'>
         {services?.map((item) => (
-          <article key={uniqueId()} className='services'>
+          <article key={uniqueId()} className='service'>
             <span>{item.icon}</span>
             <h6>{item.title}</h6>
             <p>{item.info}</p>

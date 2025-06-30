@@ -18,18 +18,26 @@ import MainLayout from '../../components/layout';
 import RoomFilter from '../../components/rooms/RoomsFilter';
 import RoomList from '../../components/rooms/RoomsList';
 import RoomGridSkeleton from '../../components/shared/RoomGridSkeleton';
+import { formattedLocalRooms } from '../../data/rooms';
 
 const { publicRuntimeConfig } = getConfig();
 
 function Rooms(props) {
-  const [ourRooms, setOurRooms] = useState([]);
-  const [ourFilteredRooms, setOurFilteredRooms] = useState([]);
+  const initialRooms = (props?.rooms?.data?.rows?.length > 0)
+    ? props.rooms.data.rows
+    : formattedLocalRooms;
+
+  const [ourRooms, setOurRooms] = useState(initialRooms);
+  const [ourFilteredRooms, setOurFilteredRooms] = useState(initialRooms);
 
   // if props rooms exists to setOurRooms
   useEffect(() => {
-    if (props?.rooms) {
-      setOurRooms(props?.rooms?.data?.rows);
-      setOurFilteredRooms(props?.rooms?.data?.rows);
+    if (props?.rooms?.data?.rows?.length > 0) {
+      setOurRooms(props.rooms.data.rows);
+      setOurFilteredRooms(props.rooms.data.rows);
+    } else {
+      setOurRooms(formattedLocalRooms);
+      setOurFilteredRooms(formattedLocalRooms);
     }
   }, [props]);
 
@@ -44,22 +52,7 @@ function Rooms(props) {
       </Hero>
 
       {/* rooms listing with modern skeleton loader */}
-      {!props?.rooms && !props?.error ? (
-        <section className='rooms-list' style={{ marginTop: '2rem' }}>
-          <RoomGridSkeleton count={6} className='rooms-list-center' />
-        </section>
-      ) : props?.rooms?.data?.rows?.length === 0 ? (
-        <Empty
-          className='mt-10'
-          description={(<span>Sorry! Any data was not found.</span>)}
-        />
-      ) : props?.error ? (
-        <Result
-          title='Failed to fetch'
-          subTitle={props?.error?.message || 'Sorry! Something went wrong. App server error'}
-          status='error'
-        />
-      ) : (
+      {ourFilteredRooms && ourFilteredRooms.length > 0 ? (
         <>
           <RoomFilter
             ourRooms={ourRooms}
@@ -69,6 +62,15 @@ function Rooms(props) {
             rooms={ourFilteredRooms}
           />
         </>
+      ) : !props?.rooms && !props?.error ? (
+        <section className='rooms-list' style={{ marginTop: '2rem' }}>
+          <RoomGridSkeleton count={6} className='rooms-list-center' />
+        </section>
+      ) : (
+        <Empty
+          className='mt-10'
+          description={(<span>Sorry! Any data was not found.</span>)}
+        />
       )}
     </MainLayout>
   );

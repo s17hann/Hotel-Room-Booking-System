@@ -724,4 +724,25 @@ const data = [
   }
 ];
 
+export const formattedLocalRooms = data.map((item) => ({
+  _id: item.sys.id,
+  id: item.sys.id,
+  room_name: item.fields.name,
+  room_slug: item.fields.slug,
+  room_type: item.fields.type,
+  room_price: item.fields.price,
+  room_size: item.fields.size,
+  room_capacity: item.fields.capacity,
+  allow_pets: item.fields.pets,
+  provide_breakfast: item.fields.breakfast,
+  featured_room: item.fields.featured,
+  room_description: item.fields.description,
+  extra_facilities: item.fields.extras,
+  room_images: item.fields.images.map((img) => ({
+    url: img.fields.file.url
+  }))
+}));
+
+export const localFeaturedRooms = formattedLocalRooms.filter((room) => room.featured_room);
+
 export default data;

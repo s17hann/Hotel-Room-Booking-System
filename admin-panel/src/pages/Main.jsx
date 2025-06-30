@@ -233,7 +233,7 @@ function Main() {
         </Content>
 
         <Footer className='text-center font-text-font font-medium '>
-          ©2023 Beach Resort — Developed By
+          ©2025 Beach Resort — Developed By
           {' '}
           <a
             className='text-color-primary hover:text-color-secondary'

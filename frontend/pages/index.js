@@ -19,10 +19,15 @@ import Services from '../components/home/Services';
 import MainLayout from '../components/layout';
 import RoomGridSkeleton from '../components/shared/RoomGridSkeleton';
 import Title from '../components/home/Title';
+import { localFeaturedRooms } from '../data/rooms';
 
 const { publicRuntimeConfig } = getConfig();
 
 function Home(props) {
+  const roomsList = (props?.featuredRooms?.data?.rows?.length > 0)
+    ? props.featuredRooms.data.rows
+    : (!props?.error ? props?.featuredRooms?.data?.rows : null) || localFeaturedRooms;
+
   return (
     <MainLayout title='Beach Resort ― Home'>
       <Hero>
@@ -38,26 +43,15 @@ function Home(props) {
       <Services />
 
       {/* featured rooms */}
-      {!props?.featuredRooms && !props?.error ? (
+      {roomsList && roomsList.length > 0 ? (
+        <FeaturedRooms featuredRoom={roomsList} />
+      ) : props?.error ? (
+        <FeaturedRooms featuredRoom={localFeaturedRooms} />
+      ) : (
         <section className='featured-rooms'>
           <Title title='featured rooms' />
           <RoomGridSkeleton count={3} />
         </section>
-      ) : props?.featuredRooms?.data?.rows?.length === 0 ? (
-        <Empty
-          className='mt-10'
-          description={(<span>Sorry! Any data was not found.</span>)}
-        />
-      ) : props?.error ? (
-        <Result
-          title='Failed to fetch'
-          subTitle={props?.error?.message || 'Sorry! Something went wrong. App server error'}
-          status='error'
-        />
-      ) : (
-        <FeaturedRooms
-          featuredRoom={props?.featuredRooms?.data?.rows}
-        />
       )}
     </MainLayout>
   );

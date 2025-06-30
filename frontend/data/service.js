@@ -2,7 +2,7 @@
  * @name Hotel Room Booking System
  * @author Shihan
  * @description Hotel Room Booking and Management System Software ~ Developed By Shihan
- * @copyright ©2023 ― Shihan. All rights reserved.
+ * @copyright ©2025 ― Shihan. All rights reserved.
  * @version v0.0.1
  *
  */
@@ -14,23 +14,23 @@ import {
 const services = [
   {
     icon: <FaCocktail />,
-    title: 'free cocktails',
-    info: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores est eaque error provident unde eligendi.'
+    title: 'Free Cocktails',
+    info: 'Enjoy handcrafted artisan cocktails and refreshing tropical drinks served daily at our oceanfront lounge.'
   },
   {
     icon: <FaHiking />,
-    title: 'endless hiking',
-    info: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores est eaque error provident unde eligendi.'
+    title: 'Endless Hiking',
+    info: 'Explore guided nature trails and scenic coastal paths with breathtaking panoramic ocean and mountain views.'
   },
   {
     icon: <FaShuttleVan />,
-    title: 'free shuttle',
-    info: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores est eaque error provident unde eligendi.'
+    title: 'Free Shuttle',
+    info: 'Complimentary private luxury airport transfers and local area chauffeured transportation on demand.'
   },
   {
     icon: <FaBeer />,
-    title: 'storages beer',
-    info: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores est eaque error provident unde eligendi.'
+    title: 'Craft Beverages',
+    info: 'Curated selection of local craft beers, chilled premium ciders, and signature beverages available 24/7.'
   }
 ];
 

@@ -24,6 +24,7 @@ import OrderPlaceModal from '../../components/utilities/OrderPlaceModal';
 import RoomReviewList from '../../components/utilities/RoomReviewList';
 import { getSessionToken, getSessionUser } from '../../utils/authentication';
 import notificationWithIcon from '../../utils/notification';
+import { formattedLocalRooms } from '../../data/rooms';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -151,12 +152,14 @@ function RoomPreview(props) {
 }
 
 export async function getServerSideProps(ctx) {
+  const localRoom = formattedLocalRooms.find((r) => r.room_slug === ctx.query.slug) || null;
+
   try {
     const apiBaseUrl = publicRuntimeConfig?.API_BASE_URL || process.env.API_BASE_URL || 'http://localhost:5001';
     const response = await axios.get(
       `${apiBaseUrl}/api/v1/get-room-by-id-or-slug-name/${ctx.query.slug}`
     );
-    const room = response?.data?.result || null;
+    const room = response?.data?.result || localRoom;
 
     return {
       props: {
@@ -165,6 +168,15 @@ export async function getServerSideProps(ctx) {
       }
     };
   } catch (err) {
+    if (localRoom) {
+      return {
+        props: {
+          room: localRoom,
+          error: null
+        }
+      };
+    }
+
     const errorMessage = err?.response?.data?.message || err?.message || 'Failed to fetch room details';
     return {
       props: {

@@ -28,7 +28,6 @@ function Navbar() {
           {/* app logo */}
           <Link href='/' className='nav-brand'>
             <img src='/images/svg/logo.svg' alt='Beach Resort' className='nav-logo-img' />
-            <span className='nav-brand-title'>BEACH RESORT</span>
           </Link>
 
           {/* navbar toggle button */}
